@@ -16,27 +16,24 @@ export default defineConfig({
   build: {
     copyPublicDir: false,
     lib: {
-      entry: resolve(__dirname, 'lib/main.ts'),
-      formats: ['es'],
+      name: 'dummy',
+      entry: resolve(__dirname, 'lib/components/Dummy/bubble.tsx'),
+      formats: ['iife'],
     },
     rollupOptions: {
-      input: Object.fromEntries(
-        glob.sync('lib/**/*.{ts,tsx}', { ignore: 'lib/**/*.stories.tsx'}).map(file => [
-          // The name of the entry point
-          // lib/nested/foo.ts becomes nested/foo
-          relative(
-            'lib',
-            file.slice(0, file.length - extname(file).length),
-          ),
-          // The absolute path to the entry file
-          // lib/nested/foo.ts becomes /project/lib/nested/foo.ts
-          fileURLToPath(new URL(file, import.meta.url)),
-        ]),
-      ),
-      output: {
-        assetFileNames: 'assets/[name][extname]',
-        entryFileNames: '[name].js',
-      },
+      // input: Object.fromEntries(
+      //   glob.sync('lib/**/*.{ts,tsx}', { ignore: 'lib/**/*.stories.tsx'}).map(file => [
+      //     relative(
+      //       'lib',
+      //       file.slice(0, file.length - extname(file).length),
+      //     ),
+      //     fileURLToPath(new URL(file, import.meta.url)),
+      //   ]),
+      // ),
+      // output: {
+      //   assetFileNames: 'assets/[name][extname]',
+      //   entryFileNames: '[name].js',
+      // },
     },
   },
 });
