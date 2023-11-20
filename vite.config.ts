@@ -23,6 +23,9 @@ export default defineConfig(({ mode}) => {
           formats: ['iife'],
         },
       },
+      define: {
+        'process.env': process.env
+      }
     };
   }
   return {
@@ -53,5 +56,8 @@ export default defineConfig(({ mode}) => {
         },
       },
     },
+    define: {
+      'process.env': process.env
+    }
   };
 });
