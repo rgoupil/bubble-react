@@ -35,39 +35,43 @@ export const createBubblePlugin = <State extends object>(name: string, Element: 
     window.components = {};
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  window.components[name].initPlugin = (instance: BubbleInstance<State>, _context: BubbleContext) => {
-    const div = document.createElement('div');
-    instance.canvas.append(div);
-    div.style.height = '100%';
-    div.style.width = '100%';
-
-    const root = createRoot(div);
-
-    const stateManager = renderPlugin(root, initState, Element);
-
-    instance.data.stateManager = stateManager;
-
-    const state = stateManager.getState();
-    for (const prop in state) {
-      instance.publishState(prop, state[prop]);
-      stateManager.subscribe((state) => {
-        instance.publishState(prop, state[prop]);
-      });
-    }
-
-    return stateManager;
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  window.components[name].previewPlugin = (instance: BubblePreviewInstance<State>, _properties: State) => {
-    const div = document.createElement('div');
-    instance.canvas.append(div);
-    div.style.height = '100%';
-    div.style.width = '100%';
-
-    const root = createRoot(div);
-
-    return renderPlugin(root, initState, Element);
+  if (window.components[name]) {
+    return;
   }
+
+  window.components[name] = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    initPlugin: (instance: BubbleInstance<State>, _context: BubbleContext) => {
+      const div = document.createElement('div');
+      instance.canvas.append(div);
+      div.style.height = '100%';
+      div.style.width = '100%';
+
+      const root = createRoot(div);
+
+      const stateManager = renderPlugin(root, initState, Element);
+
+      instance.data.stateManager = stateManager;
+
+      const state = stateManager.getState();
+      for (const prop in state) {
+        instance.publishState(prop, state[prop]);
+        stateManager.subscribe((state) => {
+          instance.publishState(prop, state[prop]);
+        });
+      }
+
+      return stateManager;
+    },
+    previewPlugin: (instance: BubblePreviewInstance<State>, properties: State) => {
+      const div = document.createElement('div');
+      instance.canvas.append(div);
+      div.style.height = '100%';
+      div.style.width = '100%';
+
+      const root = createRoot(div);
+
+      return renderPlugin(root, properties, Element);
+    },
+  };
 };
