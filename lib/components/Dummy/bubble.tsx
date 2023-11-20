@@ -17,4 +17,4 @@ export const DummyApp = () => {
   );
 };
 
-createBubblePlugin<State>(DummyApp, initState);
+createBubblePlugin(DummyApp, initState);

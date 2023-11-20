@@ -65,5 +65,7 @@ export const createBubblePlugin = <State extends object>(Element: () => JSX.Elem
     return renderPlugin(root, initState, Element);
   }
 
+  console.log('DONE', window.initPlugin, window.previewPlugin);
+
   return window.initPlugin;
 };
