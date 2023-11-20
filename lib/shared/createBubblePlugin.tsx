@@ -7,10 +7,12 @@ import { StrictMode } from 'react';
 
 declare global {
   interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    initPlugin: (instance: BubbleInstance<any>, context: BubbleContext) => StateManager<any>;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    previewPlugin: (instance: BubbleInstance<any>, properties: any) => void;
+    components: Record<string, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      initPlugin: (instance: BubbleInstance<any>, context: BubbleContext) => StateManager<any>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      previewPlugin: (instance: BubbleInstance<any>, properties: any) => void;
+    }>;
   }
 }
 
@@ -28,9 +30,13 @@ function renderPlugin<State extends object>(root: Root, initState: State, Elemen
   return stateManager;
 }
 
-export const createBubblePlugin = <State extends object>(Element: () => JSX.Element, initState: State) => {
+export const createBubblePlugin = <State extends object>(name: string, Element: () => JSX.Element, initState: State) => {
+  if (!window.components) {
+    window.components = {};
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  window.initPlugin = (instance: BubbleInstance<State>, _context: BubbleContext) => {
+  window.components[name].initPlugin = (instance: BubbleInstance<State>, _context: BubbleContext) => {
     const div = document.createElement('div');
     instance.canvas.append(div);
     div.style.height = '100%';
@@ -54,7 +60,7 @@ export const createBubblePlugin = <State extends object>(Element: () => JSX.Elem
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  window.previewPlugin = (instance: BubblePreviewInstance<State>, _properties: State) => {
+  window.components[name].previewPlugin = (instance: BubblePreviewInstance<State>, _properties: State) => {
     const div = document.createElement('div');
     instance.canvas.append(div);
     div.style.height = '100%';
@@ -64,8 +70,4 @@ export const createBubblePlugin = <State extends object>(Element: () => JSX.Elem
 
     return renderPlugin(root, initState, Element);
   }
-
-  console.log('DONE', window.initPlugin, window.previewPlugin);
-
-  return window.initPlugin;
 };
