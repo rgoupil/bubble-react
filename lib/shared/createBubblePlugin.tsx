@@ -3,6 +3,7 @@ import { ComponentContextComponent } from './ComponentContext';
 import { BubbleContext } from './BubbleContext';
 import { BubbleInstance, BubblePreviewInstance } from './BubbleInstance';
 import { StateManager } from '.';
+import { StrictMode } from 'react';
 
 declare global {
   interface Window {
@@ -17,11 +18,11 @@ function renderPlugin<State extends object>(root: Root, initState: State, Elemen
   const stateManager = new StateManager(initState);
 
   root.render(
-    <React.StrictMode>
+    <StrictMode>
       <ComponentContextComponent stateManager={stateManager}>
         <Element />
       </ComponentContextComponent>
-    </React.StrictMode>
+    </StrictMode>
   );
 
   return stateManager;
