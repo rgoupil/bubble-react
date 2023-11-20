@@ -7,33 +7,51 @@ import dts from 'vite-plugin-dts';
 import { glob } from 'glob';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    libInjectCss(),
-    dts({ include: ['lib'] }),
-  ],
-  build: {
-    copyPublicDir: false,
-    lib: {
-      name: 'dummy',
-      entry: resolve(__dirname, 'lib/components/Dummy/bubble.tsx'),
-      formats: ['iife'],
+export default defineConfig(({ mode}) => {
+  if (mode === 'bubble') {
+    return {
+      plugins: [
+        react(),
+        libInjectCss(),
+        dts({ include: ['lib'] }),
+      ],
+      build: {
+        copyPublicDir: false,
+        lib: {
+          name: 'dummy',
+          entry: resolve(__dirname, 'lib/components/Dummy/bubble.tsx'),
+          formats: ['iife'],
+        },
+      },
+    };
+  }
+  return {
+    plugins: [
+      react(),
+      libInjectCss(),
+      dts({ include: ['lib'] }),
+    ],
+    build: {
+      copyPublicDir: false,
+      lib: {
+        entry: resolve(__dirname, 'lib/main.ts'),
+        formats: ['es'],
+      },
+      rollupOptions: {
+        input: Object.fromEntries(
+          glob.sync('lib/**/*.{ts,tsx}', { ignore: 'lib/**/*.stories.tsx'}).map(file => [
+            relative(
+              'lib',
+              file.slice(0, file.length - extname(file).length),
+            ),
+            fileURLToPath(new URL(file, import.meta.url)),
+          ]),
+        ),
+        output: {
+          assetFileNames: 'assets/[name][extname]',
+          entryFileNames: '[name].js',
+        },
+      },
     },
-    rollupOptions: {
-      // input: Object.fromEntries(
-      //   glob.sync('lib/**/*.{ts,tsx}', { ignore: 'lib/**/*.stories.tsx'}).map(file => [
-      //     relative(
-      //       'lib',
-      //       file.slice(0, file.length - extname(file).length),
-      //     ),
-      //     fileURLToPath(new URL(file, import.meta.url)),
-      //   ]),
-      // ),
-      // output: {
-      //   assetFileNames: 'assets/[name][extname]',
-      //   entryFileNames: '[name].js',
-      // },
-    },
-  },
+  };
 });
