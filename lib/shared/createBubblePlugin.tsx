@@ -74,4 +74,6 @@ export const createBubblePlugin = <State extends object>(name: string, Element: 
       return renderPlugin(root, properties, Element);
     },
   };
+
+  return window.components[name];
 };

@@ -1,20 +1,16 @@
-import { Dummy } from '.';
+/*rollup sideEffects: true */
+import { Dummy, Props } from '.';
 import { createBubblePlugin, useComponentState } from '../../shared';
 
-interface State {
-  name: string;
-}
-
-const initState: State = {
+const initialState: Props = {
   name: 'Doofus',
 };
 
-export const DummyApp = () => {
-  const { name } = useComponentState<State>();
+// eslint-disable-next-line react-refresh/only-export-components
+export default () => createBubblePlugin('Dummy', () => {
+  const props = useComponentState<Props>();
 
   return (
-    <Dummy name={name} />
+    <Dummy {...props} />
   );
-};
-
-createBubblePlugin('Dummy', DummyApp, initState);
+}, initialState);

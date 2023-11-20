@@ -18,14 +18,20 @@ export default defineConfig(({ mode}) => {
       build: {
         copyPublicDir: false,
         lib: {
-          name: 'dummy',
-          entry: resolve(__dirname, 'lib/components/Dummy/bubble.tsx'),
+          name: 'bubble',
+          entry: resolve(__dirname, 'lib/bubble.ts'),
           formats: ['iife'],
+        },
+        rollupOptions: {
+          output: {
+            assetFileNames: 'assets/[name][extname]',
+            entryFileNames: '[name].js',
+          },
         },
       },
       define: {
-        'process.env': process.env
-      }
+        'process.env': process.env,
+      },
     };
   }
   return {
@@ -57,7 +63,7 @@ export default defineConfig(({ mode}) => {
       },
     },
     define: {
-      'process.env': process.env
-    }
+      'process.env': process.env,
+    },
   };
 });

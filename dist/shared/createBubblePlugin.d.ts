@@ -9,4 +9,7 @@ declare global {
         }>;
     }
 }
-export declare const createBubblePlugin: <State extends object>(name: string, Element: () => JSX.Element, initState: State) => void;
+export declare const createBubblePlugin: <State extends object>(name: string, Element: () => JSX.Element, initState: State) => {
+    initPlugin: (instance: BubbleInstance<any>, context: BubbleContext) => StateManager<any>;
+    previewPlugin: (instance: BubbleInstance<any>, properties: any) => void;
+} | undefined;
